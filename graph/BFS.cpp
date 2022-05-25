@@ -28,25 +28,21 @@ class Graph{
 
         vector<int> BFS(int start){
             int vertex;
-            this->visited.push_back(start);
-            for(auto m:this->graph[start]){
-                if((find(this->visited.begin(),this->visited.end(),m) == this->visited.end())){
-                        q.push(m);
-                    }
-            }
+            queue<int> q;
+            q.push(start);
+            visited.push_back(start);
+
             while(!q.empty()){
                 vertex = q.front();
                 q.pop();
-                if(find(this->visited.begin(),this->visited.end(),vertex) == this->visited.end()){
-                    visited.push_back(vertex);
-                }
-                for(auto x:this->graph[vertex]){
-                    if((find(this->visited.begin(),this->visited.end(),x) == this->visited.end())){
+                for(auto x:graph[vertex]){
+                    if(find(visited.begin(),visited.end(),x) == visited.end()){
                         q.push(x);
+                        visited.push_back(x);
                     }
                 }
             }
-            return this->visited;
+            return visited;
         }
 
 };
