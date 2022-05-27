@@ -45,6 +45,24 @@ class Graph{
             return visited;
         }
 
+        void DFShelper(int start,unordered_map<int,bool>& v,vector<int>& p){
+            v[start] = true;
+            p.push_back(start);
+            for(auto x:graph[start]){
+                if(!v.count(x)){
+                    DFShelper(x,v,p);
+                }
+            }
+            return;
+        }
+
+        vector<int> DFS(int start){
+            vector<int> path;
+            unordered_map<int,bool> visited;
+            DFShelper(start,visited,path);
+            return path;
+        }
+
 };
 
 int main(){
@@ -68,6 +86,13 @@ int main(){
     cout<<"BFS: ";
     for(auto i:bfs){
         cout<<i<<" ";
+    }
+    cout<<endl;
+
+    cout<<"DFS:";
+    vector<int> dfs = g.DFS(1);
+    for(int x:dfs){
+        cout<<x<<" ";
     }
     cout<<endl;
 
