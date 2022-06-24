@@ -107,6 +107,23 @@ class Graph{
 
         }
 
+        bool cycleDetector(int node,unordered_map<int,bool>& visited,int parent){
+            visited[node] = true;
+            for(auto nbr:graph[node]){
+                if(!visited[nbr]){
+                    return cycleDetector(nbr,visited,node);
+                }else if(nbr != parent){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool hasCycle(int start){
+            unordered_map<int,bool> visited;
+            return cycleDetector(start,visited,-1);
+        }
+
 };
 
 int main(){
@@ -139,6 +156,12 @@ int main(){
         cout<<x<<" ";
     }
     cout<<endl;
+
+    if(g.hasCycle(0)){
+        cout<<"Graph has a cycle"<<endl;
+    }else{
+        cout<<"Graph doesn't have a cycle"<<endl;
+    }
 
     return 0;
 }
