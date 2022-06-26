@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <iostream>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ class Graph{
             if(!count(graph[v].begin(),graph[v].end(),e)){
                 graph[v].push_back(e);
             }
-            if(!count(graph[e].begin(),graph[e].end(),v) and undir){
+            if(undir and !count(graph[e].begin(),graph[e].end(),v)){
                 graph[e].push_back(v);
             }
         }
@@ -119,15 +120,42 @@ class Graph{
             return false;
         }
 
-        bool hasCycle(int start){
+        bool hasCycleUndir(int start){
             unordered_map<int,bool> visited;
             return cycleDetector(start,visited,-1);
+        }
+
+        bool cycleDetetorDir(int node,unordered_map<int,bool>& visisted, unordered_map<int,bool>& stack){
+            visisted[node] = true;
+            stack[node] = true;
+            for(auto e:graph[node]){
+                if(stack[e]){
+                    return true;
+                }else if(!visisted[e]){
+                    if(cycleDetetorDir(e,visisted,stack)){
+                        return true;
+                    }
+                }
+            }
+            stack[node] = false;
+            return false;
+        }
+
+        bool hasCycleDir(){
+            unordered_map<int,bool> visited,stack;
+            for(auto g:graph){
+                if(cycleDetetorDir(g.first, visited, stack)){
+                    return true;
+                }
+            }
+            return false;
         }
 
 };
 
 int main(){
     Graph g;
+    Graph gDir;
     g.addEdge(0,1);
     g.addEdge(0,4);
     g.addEdge(1,0);
@@ -157,11 +185,34 @@ int main(){
     }
     cout<<endl;
 
-    if(g.hasCycle(0)){
+    if(g.hasCycleUndir(0)){
         cout<<"Graph has a cycle"<<endl;
     }else{
         cout<<"Graph doesn't have a cycle"<<endl;
     }
+
+
+    // Directed Graph
+    // gDir.addEdge(1,1,false);
+    // gDir.addEdge(2,1,false);
+    // gDir.addEdge(2,5,false);
+    // gDir.addEdge(5,1,false);
+    // gDir.addEdge(5,3,false);
+    // gDir.addEdge(3,4,false);
+    // gDir.addEdge(4,7,false);
+    // gDir.addEdge(7,5,false);
+
+    gDir.addEdge(1,2,false);
+    gDir.addEdge(1,4,false);
+    gDir.addEdge(2,3,false);
+    gDir.addEdge(3,4,false);
+
+    if(gDir.hasCycleDir()){
+        cout<<"This directed graph has cycle"<<endl;
+    }else{
+        cout<<"this directed graph doesn't contain cycle"<<endl;
+    }
+
 
     return 0;
 }
